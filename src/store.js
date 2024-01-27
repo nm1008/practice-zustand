@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import axiosUrl from "./api/axiosURL";
 
 const useCounter = create((set) => ({
   counter: 0,
@@ -11,9 +12,12 @@ const useCounter = create((set) => ({
   fetchData: async () => {
     try {
       set({ loading: true, error: null });
-      const response = await fetch("https://pokeapi.co/api/v2/pokemon/");
-      const result = await response.json();
-      set({ data: result.results, nextPage: result.next, loading: false });
+      const result = await axiosUrl();
+      set({
+        data: result.data.results,
+        nextPage: result.data.next,
+        loading: false,
+      });
     } catch (error) {
       set({ loading: false, error: "Error on fetching data" });
       console.log("Error on fetching data");
